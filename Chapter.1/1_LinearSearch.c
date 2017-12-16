@@ -32,5 +32,8 @@ int main()
 	else
 		printf("타겟 저장 인덱스 : %d\n", idx);
 
+	// 최악의 경우 시간 복잡도 T(n) = n	, O(n)
+	// 평균의 경우 시간 복잡도 T(n) = (3 / 4) / n, O(n)
+
 	return 0;
 }
