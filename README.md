@@ -1,6 +1,6 @@
 # c_study_HotBlood_DataStructure
 
-윤성우의 열혈 자료구조
+ 윤성우의 열혈 자료구조
 Chapter 01. 자료구조와 알고리즘의 이해
 01-1. 자료구조(Data Structure)에 대한 기본적인 이해
 01-2. 알고리즘의 성능분석 방법
