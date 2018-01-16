@@ -17,6 +17,7 @@ int main()
 	int readData;
 
 	head = (Node*)malloc(sizeof(Node));
+	// 더미노드 추가
 	tail = head;
 
 	// 데이터를 입력 받는 과정 /////
