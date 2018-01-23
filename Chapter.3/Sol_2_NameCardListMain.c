@@ -18,7 +18,7 @@ int main()
 	pcard = MakeNameCard("People3", "010-3333-3333");
 	LInsert(&list, pcard);
 
-	// 초기 정보 출력
+	/* 초기 정보 출력 */
 	printf("현재 데이터의 수 : %d\n", LCount(&list));
 
 	if (LFirst(&list, &pcard))
@@ -30,7 +30,7 @@ int main()
 	}
 	printf("\n");
 
-	// People1의 정보를 조회하여 출력
+	/* People1의 정보를 조회하여 출력 */
 	if (LFirst(&list, &pcard))
 	{
 		if (!NameCompare(pcard, "People1"))
@@ -51,7 +51,7 @@ int main()
 	}
 	printf("\n");
 
-	// People2의 정보를 조회하여 변경
+	/* People2의 정보를 조회하여 변경 */
 	if (LFirst(&list, &pcard))
 	{
 		if (!NameCompare(pcard, "People2"))
@@ -71,7 +71,7 @@ int main()
 		}
 	}
 
-	// People3의 정보를 조회하여 삭제
+	/* People3의 정보를 조회하여 삭제 */
 	if (LFirst(&list, &pcard))
 	{
 		if (!NameCompare(pcard, "People3"))
@@ -93,7 +93,7 @@ int main()
 		}
 	}
 
-	// 최종 정보 출력
+	/* 최종 정보 출력 */
 	printf("현재 데이터의 수 : %d\n", LCount(&list));
 
 	if (LFirst(&list, &pcard))

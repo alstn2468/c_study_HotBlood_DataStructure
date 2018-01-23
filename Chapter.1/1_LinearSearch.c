@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-// 순차 탐색 알고리즘이 적용된 함수
+/* 순차 탐색 알고리즘이 적용된 함수 */
 int LSearch(int ar[], int len, int target)
 {
 	int i;

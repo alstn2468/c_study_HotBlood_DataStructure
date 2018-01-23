@@ -3,17 +3,17 @@
 
 int main()
 {
-	// ArrayList의 생성 및 초기화 /////
+	/* ArrayList의 생성 및 초기화 */
 	List list;
 	int data;
 	ListInit(&list);
 
-	// 5개의 데이터 저장 /////
+	/* 5개의 데이터 저장 */
 	LInsert(&list, 11); LInsert(&list, 11);
 	LInsert(&list, 22); LInsert(&list, 22);
 	LInsert(&list, 33);
 
-	// 저장된 데이터의 전체 출력 /////
+	/* 저장된 데이터의 전체 출력 */
 	printf("현재 데이터의 수 : %d\n", LCount(&list));
 
 	if (LFirst(&list, &data))	// 첫 번째 데이터 조회
@@ -25,7 +25,7 @@ int main()
 	}
 	printf("\n\n");
 
-	// 숫자 22을 탐색하여 모두 삭제 /////
+	/* 숫자 22을 탐색하여 모두 삭제 */
 	if (LFirst(&list, &data))
 	{
 		if (data == 22)
@@ -38,7 +38,7 @@ int main()
 		}
 	}
 
-	// 삭제 후 남은 데이터 전체 출력 /////
+	/* 삭제 후 남은 데이터 전체 출력 */
 	printf("현재 데이터의 수 : %d\n", LCount(&list));
 
 	if (Lfirst(&list, &data))

@@ -57,7 +57,7 @@ int main(void)
 	}
 	printf("\n");
 
-	// xpos가 2인 모든 데이터 삭제  ////////
+	/* xpos가 2인 모든 데이터 삭제 */
 	comp.xpos = 2;
 	comp.ypos = 0;
 
@@ -79,7 +79,7 @@ int main(void)
 		}
 	}
 
-	// 삭제 후 저장된 데이터 출력 ////////
+	/* 삭제 후 저장된 데이터 출력 */
 	printf("현재 데이터의 수: %d \n", LCount(&list));
 
 	if(LFirst(&list, &pPoint))

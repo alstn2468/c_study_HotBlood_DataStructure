@@ -16,7 +16,7 @@ int main()
 	Node * newNode = NULL;
 	int readData;
 
-	// 데이터를 입력 받는 과정 /////
+	/* 데이터를 입력 받는 과정 */
 	while (1)
 	{
 		printf("자연수 입력 : ");
@@ -24,7 +24,7 @@ int main()
 		if (readData < 1)
 			break;
 
-		// 노드의 추가과정
+		/* 노드의 추가과정 */
 		newNode = (Node*)malloc(sizeof(Node));
 		newNode->data = readData;
 		newNode->next = NULL;
@@ -42,7 +42,7 @@ int main()
 	}
 	printf("\n");
 
-	// 입력 받은 데이터의 출력과정 /////
+	/* 입력 받은 데이터의 출력과정 */
 	printf("입력 받은 데이터의 전체 출력!\n");
 	if (head == NULL)
 	{
@@ -61,7 +61,7 @@ int main()
 	}
 	printf("\n\n");
 
-	// 메모리의 해제 과정 /////
+	/* 메모리의 해제 과정 */
 	if (head == NULL)
 	{
 		return 0;	// 해제할 노드가 존재하지 않는다.
