@@ -4,7 +4,6 @@
 #include "BinarySearchTree3.h"
 #include "AVLRebalance.h"
 
-
 void BSTMakeAndInit(BTreeNode ** pRoot)
 {
 	*pRoot = NULL;
@@ -17,33 +16,48 @@ BSTData BSTGetNodeData(BTreeNode * bst)
 
 void BSTInsert(BTreeNode ** pRoot, BSTData data)
 {
-	if (*pRoot == NULL)
+	BTreeNode * pNode = NULL;    // parent node
+	BTreeNode * cNode = *pRoot;    // current node
+	BTreeNode * nNode = NULL;    // new node
+
+	/* 새로운 노드가 추가될 위치를 찾는다. */
+	while (cNode != NULL)
 	{
-		*pRoot = MakeBTreeNode();
-		SetData(*pRoot, data);
-	}
-	else if (data < GetData(*pRoot))
-	{
-		BSTInsert(&((*pRoot)->left), data);
-		*pRoot = Rebalance(pRoot);
-	}
-	else if (data > GetData(*pRoot))
-	{
-		BSTInsert(&((*pRoot)->right), data);
-		*pRoot = Rebalance(pRoot);
-	}
-	else
-	{
-		return NULL;	// 키의 중복을 혀용하지 않는다
+		if (data == GetData(cNode))
+			return;    // 키의 중복을 허용하지 않음
+
+		pNode = cNode;
+
+		if (GetData(cNode) > data)
+			cNode = GetLeftSubTree(cNode);
+		else
+			cNode = GetRightSubTree(cNode);
 	}
 
-	return *pRoot;
+	/* pNode의 서브 노드에 추가할 새 노드의 생성 */
+	nNode = MakeBTreeNode();    // 새 노드의 생성
+	SetData(nNode, data);    // 새 노드에 데이터 저장
+
+	/* pNode의 서브 노드에 새 노드를 추가 */
+	if (pNode != NULL)    // 새 노드가 루트 노드가 아니라면,
+	{
+		if (data < GetData(pNode))
+			MakeLeftSubTree(pNode, nNode);
+		else
+			MakeRightSubTree(pNode, nNode);
+	}
+	else    // 새 노드가 루트 노드라면,
+	{
+		*pRoot = nNode;
+	}
+
+	*pRoot = Rebalance(pRoot);	// 노드 추가 후 리밸런싱
 }
 
 BTreeNode * BSTSearch(BTreeNode * bst, BSTData target)
 {
-	BTreeNode * cNode = bst;	// current node
-	BSTData cd;	// current data
+	BTreeNode * cNode = bst;    // current node
+	BSTData cd;    // current data
 
 	while (cNode != NULL)
 	{
@@ -57,21 +71,23 @@ BTreeNode * BSTSearch(BTreeNode * bst, BSTData target)
 			cNode = GetRightSubTree(cNode);
 	}
 
-	return NULL;	// 탐색대상이 저장되어 있지 않음
+	return NULL;
 }
 
 BTreeNode * BSTRemove(BTreeNode ** pRoot, BSTData target)
 {
-	/* 삭제 대상이 루트 노드인 경우를 고려 */
-	BTreeNode * pvRoot = MakeBTreeNode();	// 가상 루트 노드
-	BTreeNode * pNode = pvRoot;	// parent node
-	BTreeNode * cNode = *pRoot;	// current node
-	BTreeNode * dNode;	// delete node
+	/* 삭제 대상이 루트 노드인 경우를 별도로 고려해야 한다. */
 
-	/* 루트 노드를 pvRoot가 가리키는 노드의 오른쪽 자식 노드가 되게 한다 */
-	ChangeRightSubTree(pvRoot, *pRoot);
+	BTreeNode * pVRoot = MakeBTreeNode();    // 가상 루트 노드;
 
-	/* 삭제 대상인 노드를 탐색 */
+	BTreeNode * pNode = pVRoot;    // parent node
+	BTreeNode * cNode = *pRoot;    // current node
+	BTreeNode * dNode;    // delete node
+
+	/* 루트 노드를 pVRoot가 가리키는 노드의 오른쪽 서브 노드가 되게 한다. */
+	ChangeRightSubTree(pVRoot, *pRoot);
+
+	/* 삭제 대상을 저장한 노드 탐색 */
 	while (cNode != NULL && GetData(cNode) != target)
 	{
 		pNode = cNode;
@@ -82,12 +98,12 @@ BTreeNode * BSTRemove(BTreeNode ** pRoot, BSTData target)
 			cNode = GetRightSubTree(cNode);
 	}
 
-	if (cNode == NULL)	// 삭제 대상이 존재하지 않는다면
+	if (cNode == NULL)    // 삭제 대상이 존재하지 않는다면,
 		return NULL;
 
-	dNode = cNode;	// 삭제 대상을 dNode가 가리키게 한다
+	dNode = cNode;    // 삭제 대상을 dNode가 가리키게 한다.
 
-	/* 경우 1 : 삭제 대상이 단말 노드인 경우 */
+	/* 첫 번째 경우: 삭제할 노드가 단말 노드인 경우 */
 	if (GetLeftSubTree(dNode) == NULL && GetRightSubTree(dNode) == NULL)
 	{
 		if (GetLeftSubTree(pNode) == dNode)
@@ -96,10 +112,10 @@ BTreeNode * BSTRemove(BTreeNode ** pRoot, BSTData target)
 			RemoveRightSubTree(pNode);
 	}
 
-	/* 경우 2 : 삭제 대상이 하나의 자식 노드를 갖는 경우 */
+	/* 두 번째 경우: 하나의 자식 노드를 갖는 경우 */
 	else if (GetLeftSubTree(dNode) == NULL || GetRightSubTree(dNode) == NULL)
 	{
-		BTreeNode * dcNode;	// 삭제 대상의 자식 노드를 가리킴
+		BTreeNode * dcNode;    // delete node의 자식 노드
 
 		if (GetLeftSubTree(dNode) != NULL)
 			dcNode = GetLeftSubTree(dNode);
@@ -112,41 +128,42 @@ BTreeNode * BSTRemove(BTreeNode ** pRoot, BSTData target)
 			ChangeRightSubTree(pNode, dcNode);
 	}
 
-	/* 경우 3 : 두 개의 자식 노드를 모두 갖는 경우 */
+	/* 세 번째 경우: 두 개의 자식 노드를 모두 갖는 경우 */
 	else
 	{
-		BTreeNode * mNode = GetRightSubTree(dNode);	// 대체 노드를 가리킴
-		BTreeNode * mpNode = dNode;	// 대체 노드의 부모 노드를 가리킴
+		BTreeNode * mNode = GetRightSubTree(dNode);    // mininum node
+		BTreeNode * mpNode = dNode;    // mininum node의 부모 노드
 		int delData;
 
-		/* 삭제 대상의 대체 노드를 찾는다 */
+		/* 삭제할 노드를 대체할 노드를 찾는다. */
 		while (GetLeftSubTree(mNode) != NULL)
 		{
 			mpNode = mNode;
 			mNode = GetLeftSubTree(mNode);
 		}
 
-		/* 대체 노드에 저장된 값을 삭제할 노드에 대입한다 */
-		delData = GetData(dNode);	// 대입 전 데이터 백업
-		SetData(dNode, GetData(mNode));	// 대입
+		/* 대체할 노드에 저장된 값을 삭제할 노드에 대입한다. */
+		delData = GetData(dNode);    // 대입 전 데이터 백업
+		SetData(dNode, GetData(mNode));
 
-		/* 대체 노드의 부모 노드와 자식 노드를 연결한다 */
+		/* 대체할 노드의 부모 노드와 자식 노드를 연결한다. */
 		if (GetLeftSubTree(mpNode) == mNode)
 			ChangeLeftSubTree(mpNode, GetRightSubTree(mNode));
 		else
 			ChangeRightSubTree(mpNode, GetRightSubTree(mNode));
 
 		dNode = mNode;
-		SetData(dNode, delData);	// 백업 데이터 복원
+		SetData(dNode, delData);    // 백업 데이터 복원
 	}
 
-	/* 삭제된 노드가 루트 노드인 경우에 대한 추가적인 처리 */
-	if (GetRightSubTree(pvRoot) != *pRoot)
-		*pRoot = GetRightSubTree(pvRoot);	// 루트 노드의 변경을 반영
+	/* 삭제된 노드가 루트 노드인 경우에 대한 처리 */
+	if (GetRightSubTree(pVRoot) != *pRoot)
+		*pRoot = GetRightSubTree(pVRoot);
 
-	free(pvRoot);	// 가상 루트 노드의 소멸
-	*pRoot = Rebalance(pRoot);	// 노드 제거후 리밸런싱
-	return dNode;	// 삭제 대상의 반환
+	free(pVRoot);
+
+	*pRoot = Rebalance(pRoot); 	// 노드 제거 후 리밸런싱!
+	return dNode;
 }
 
 void ShowIntData(int data)
@@ -156,5 +173,5 @@ void ShowIntData(int data)
 
 void BSTShowAll(BTreeNode * bst)
 {
-	InorderTraverse(bst, ShowIntData);	// 중위 순회
+	InorderTraverse(bst, ShowIntData);
 }
