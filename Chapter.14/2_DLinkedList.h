@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __D_LINKED_LIST_H__
 #define __D_LINKED_LIST_H__
 
