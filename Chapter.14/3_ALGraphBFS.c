@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ALGraphDFS.h"
+#include "ALGraphBFS.h"
 #include "DLinkedList.h"
-#include "ArrayBaseStack.h"
+#include "CircularQueue.h"
 
 int WhoIsPrecede(int data1, int data2);
 
-/* 그래프의 초기화 */
 void GraphInit(ALGraph * pg, int nv)
 {
 	int i;
@@ -18,7 +17,7 @@ void GraphInit(ALGraph * pg, int nv)
 	pg->numV = nv;	// 정점의 수는 nv에 저장된 값으로 결정
 	pg->numE = 0;	// 초기의 간선 수는 0개
 
-	/* 정점의 수만큼 생성된 리스트를 초기화 */
+					/* 정점의 수만큼 생성된 리스트를 초기화 */
 	for (i = 0; i < nv; i++)
 	{
 		ListInit(&(pg->adjList[i]));
@@ -29,7 +28,6 @@ void GraphInit(ALGraph * pg, int nv)
 	memset(pg->visitInfo, 0, sizeof(int) * pg->numV);
 }
 
-/* 그래프 리소스의 해제 */
 void GraphDestroy(ALGraph * pg)
 {
 	if (pg->adjList != NULL)
@@ -39,7 +37,6 @@ void GraphDestroy(ALGraph * pg)
 		free(pg->visitInfo);
 }
 
-/* 간선의 추가 */
 void AddEdge(ALGraph * pg, int fromV, int toV)
 {
 	LInsert(&(pg->adjList[fromV]), toV);
@@ -47,7 +44,6 @@ void AddEdge(ALGraph * pg, int fromV, int toV)
 	pg->numE += 1;
 }
 
-/* 간선의 정보 출력 */
 void ShowGraphEdgeInfo(ALGraph * pg)
 {
 	int i;
@@ -88,48 +84,33 @@ int VisitVertex(ALGraph * pg, int visitV)
 	return FALSE;
 }
 
-void DFShowGraphVertex(ALGraph * pg, int startV)
+void BFShowGraphVertex(ALGraph * pg, int startV)
 {
-	Stack stack;
+	Queue queue;
 	int visitV = startV;
 	int nextV;
 
-	StackInit(&stack);
-	VisitVertex(pg, visitV);
-	SPush(&stack, visitV);
+	QueueInit(&queue);
 
+	VisitVertex(pg, visitV);	// 시작 정점을 탐색
+
+	/* visitV와 연결된 모든 정점에 방문 */
 	while (LFirst(&(pg->adjList[visitV]), &nextV) == TRUE)
 	{
-		int visitFlag = FALSE;
-
 		if (VisitVertex(pg, nextV) == TRUE)
+			Enqueue(&queue, nextV);	// nextV에 방문했으니 큐에 저장
+
+		while (LNext(&(pg->adjList[visitV]), &nextV) == TRUE)
 		{
-			SPush(&stack, visitV);
-			visitV = nextV;
-			visitFlag = TRUE;
-		}
-		else
-		{
-			while (LNext(&(pg->adjList[visitV]), &nextV) == TRUE)
-			{
-				if (VisitVertex(pg, nextV) == TRUE)
-				{
-					SPush(&stack, visitV);
-					visitV = nextV;
-					visitFlag = TRUE;
-					break;
-				}
-			}
+			if (VisitVertex(pg, nextV) == TRUE)
+				Enqueue(&queue, nextV);	// nextV에 방문했으니 큐에 저장
 		}
 
-		if (visitFlag == FALSE)
-		{
-			if (SIsEmpty(&stack) == TRUE)
-				break;
-			else
-				visitV = SPop(&stack);
-		}
+		if (QIsEmpty(&queue) == TRUE)	// 큐가 비어있으면 BFS 종료
+			break;
+		else
+			visitV = Dequeue(&queue);	// 큐에서 하나 꺼내서 while문 다시 시작
 	}
 
-	memset(pg->visitInfo, 0, sizeof(int) * pg->numV);
+	memset(pg->visitInfo, 0, sizeof(int) * pg->numV);	// 탐색 정보 초기화
 }
