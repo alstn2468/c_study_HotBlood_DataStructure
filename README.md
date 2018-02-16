@@ -1,5 +1,7 @@
 # c_study_HotBlood_DataStructure
 
+2018 / 01/ 23 ~ 2018 / 02/ 16<br/>
+
  윤성우의 열혈 자료구조<br>
 Chapter 01. 자료구조와 알고리즘의 이해<br>
 01-1. 자료구조(Data Structure)에 대한 기본적인 이해<br>
