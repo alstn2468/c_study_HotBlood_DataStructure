@@ -17,7 +17,7 @@ void GraphInit(ALGraph * pg, int nv)
 	pg->numV = nv;	// 정점의 수는 nv에 저장된 값으로 결정
 	pg->numE = 0;	// 초기의 간선 수는 0개
 
-					/* 정점의 수만큼 생성된 리스트를 초기화 */
+	/* 정점의 수만큼 생성된 리스트를 초기화 */
 	for (i = 0; i < nv; i++)
 	{
 		ListInit(&(pg->adjList[i]));
